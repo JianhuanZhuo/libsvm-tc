@@ -1,9 +1,13 @@
-package org.akgul;
+package akgul;
 
+import cn.keepfight.tc.FeatureMaker;
+import cn.keepfight.tc.LabeledProcessor;
+import cn.keepfight.tc.Pair;
 import org.akgul.MutableInt;
 import org.akgul.TfIdf;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

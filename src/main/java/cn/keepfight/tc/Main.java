@@ -3,8 +3,13 @@ package cn.keepfight.tc;
 import com.chenlb.mmseg4j.*;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
+ *
  * Created by 卓建欢 on 2017/12/17.
  */
 public class Main {
@@ -43,10 +48,12 @@ public class Main {
 //        svm_train.main(arg); // 调用
 //        svm_predict.main(parg); // 调用
 
-        String txt = "京华时报2018年1月23日报道 昨天，受一股来自中西伯利亚的强冷空气影响，本市出现大风降温天气，白天最高气温只有零下7摄氏度，同时伴有6到7级的偏北风。";
-        if (args.length > 0) {
-            txt = args[0];
-        }
-        System.out.println(segWords(txt, " | "));
+//        String txt = "京华时报2018年1月23日报道 昨天，受到了一股来自中西伯利亚的强冷空气影响，本市出现大风降温天气，白天最高气温只有零下7摄氏度，同时伴有6到7级的偏北风。";
+//        if (args.length > 0) {
+//            txt = args[0];
+//        }
+//        System.out.println(segWords(txt, " | "));
+
+        DicMap.getInstance().read();
     }
 }
