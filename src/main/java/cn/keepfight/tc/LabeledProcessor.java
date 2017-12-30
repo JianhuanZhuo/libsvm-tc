@@ -16,7 +16,7 @@ public class LabeledProcessor {
     public List<String> getLabeledText() throws IOException {
         return FileUtils.readLines(new File(LABLED_FILE), "UTF-8")
                 .stream()
-//                .limit(100000)
+//                .limit(1000)
                 .map(s -> s.substring(2))
                 .collect(Collectors.toList());
     }

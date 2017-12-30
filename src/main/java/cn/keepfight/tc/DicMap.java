@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,9 @@ public class DicMap {
 
     private AtomicInteger count = new AtomicInteger(0);
     private Set<String> stopWords;
-    private HashMap<String, Integer> map;
+//    private HashMap<String, Integer> map = new HashMap<>();
+    private ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+
 
     private static DicMap instance;
 
@@ -56,7 +59,7 @@ public class DicMap {
     }
 
     public void read(File file) throws IOException {
-        map = new HashMap<>();
+        map = new ConcurrentHashMap<>();
         try {
             FileUtils.readLines(file, ENCODE)
                     .forEach(line -> {
@@ -78,16 +81,17 @@ public class DicMap {
         write(new File(FILE_DEFAULT));
     }
 
-    public HashMap<String, Integer> getMap() {
-        if (map==null){
-            try {
-                read();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.err.println("no map and I can't read it with default file");
-                System.exit(-1);
-            }
-        }
+    public Map<String, Integer> getMap() {
+//        if (map==null){
+////            try {
+////                read();
+////            } catch (IOException e) {
+////                e.printStackTrace();
+////                System.err.println("no map and I can't read it with default file");
+////                System.exit(-1);
+////            }
+//            map=new HashMap<>();
+//        }
         return map;
     }
 
