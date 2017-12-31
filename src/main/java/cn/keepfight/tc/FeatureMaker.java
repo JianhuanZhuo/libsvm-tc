@@ -9,6 +9,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -42,16 +43,21 @@ public class FeatureMaker {
                 .filter(s->!pattern.matcher(s).matches())
                 .collect(Collectors.groupingBy(str -> str, Collectors.counting()));
 
+        numMap = numMap.entrySet()
+                .parallelStream()
+                .filter(Objects::nonNull)
+                .filter(en -> en.getValue() > 5)
+                .filter(en->en.getKey().length()>1)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
         numMap.entrySet()
                 .parallelStream()
-                .filter(en -> en.getValue() > 5)
                 .map(Map.Entry::getKey)
                 .forEach(dicMap::make);
 
         List<String> dic_num =
                 numMap.entrySet()
                 .parallelStream()
-                .filter(en -> en.getValue() > 5)
                 .map(en -> en.getKey() + " " + en.getValue())
                         .collect(Collectors.toList());
 

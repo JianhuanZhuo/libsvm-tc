@@ -8,7 +8,6 @@
     <artifactId>libsvm-tc</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
     <dependencies>
         <dependency>
             <groupId>tw.edu.ntu.csie</groupId>

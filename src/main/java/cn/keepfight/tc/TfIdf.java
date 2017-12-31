@@ -104,29 +104,15 @@ public class TfIdf {
     }
 
     /**
-     * This is the same method as calculating the tf scores. I don't know why I've
-     * written the same thing again.
-     *
-     * @param list List that contains the words that are split by space.
-     * @return map that contains the words and their tf scores.
-     * @see TfIdf#tf()
-     */
-    private Map<String, Long> counter(List<String> list) {
-        return list.stream().collect(Collectors.groupingBy(x -> x, Collectors.counting()));
-    }
-
-    /**
      * Calculates the df scores of the words in documents.
      *
      * @return Map that contains the words and their df scores.
      */
     public Map<String, Long> df() {
-        List<String> list = documents.stream()
+        return documents.stream()
                 .map(this::build_words)
                 .flatMap(List::stream)
-                .distinct()
-                .collect(Collectors.toList());
-        return counter(list);
+                .collect(Collectors.groupingBy(x -> x, Collectors.counting()));
     }
 
     /**
@@ -136,11 +122,10 @@ public class TfIdf {
      * @return Map that contains the words and their df scores.
      */
     public Map<String, Long> df(List<String> documents) {
-        List<String> list = documents.stream()
+        return documents.stream()
                 .map(this::build_words)
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
-        return counter(list);
+                .collect(Collectors.groupingBy(x -> x, Collectors.counting()));
     }
 
     /**
@@ -178,15 +163,18 @@ public class TfIdf {
 
     public List<Pair<Integer, Map<Integer, Double>>> tfidf(List<Pair<Integer, String>> documents) {
         final Map<String, Long> df_scores = df();
-        return documents.stream().map(document -> {
+        final int N = documents.size();
+//        System.out.println(df().entrySet().stream().map(e->e.getKey()+":"+e.getValue()).collect(Collectors.joining("\n")));
+        return documents.parallelStream().map(document -> {
             Pair<Integer, Map<Integer, Double>> res = new Pair<>();
             Map<String, Long> tf_scores = tf(document.getV());
             res.setK(document.getK());
             res.setV(build_words(document.getV()).stream()
                     .distinct()
-                    .filter(s->Objects.nonNull(DicMap.getInstance().get(s)))
+                    .filter(s -> Objects.nonNull(DicMap.getInstance().get(s)))
                     .map(d -> new Pair<>(d, tf_scores.get(d) / (df_scores.get(d) + 0.01)))
-                    .collect(Collectors.toMap(s->DicMap.getInstance().get(s.getK()), Pair::getV)));
+//                    .map(d -> new Pair<>(d, tf_scores.get(d) * (Math.log(N / df_scores.get(d))) + 0.01))
+                    .collect(Collectors.toMap(s -> DicMap.getInstance().get(s.getK()), Pair::getV)));
             return res;
         }).collect(Collectors.toList());
     }
